@@ -27,3 +27,18 @@ resource "azurerm_storage_account_network_rules" "storage" {
   default_action     = "Deny"
   bypass             = ["AzureServices", "Logging", "Metrics"]
 }
+
+resource "azurerm_private_endpoint" "pe_storage_blob" {
+  name                = "pe-${azurerm_storage_account.storage.name}"
+  location            = azurerm_storage_account.storage.location
+  resource_group_name = azurerm_storage_account.storage.resource_group_name
+  subnet_id           = azurerm_subnet.subnet.id
+
+  # private connection details
+  private_service_connection {
+    name                           = "psc-${azurerm_storage_account.storage.name}"
+    private_connection_resource_id = azurerm_storage_account.storage.id
+    is_manual_connection           = false
+    subresource_names              = ["blob"]
+  }
+}
