@@ -20,6 +20,11 @@ resource "azurerm_storage_account" "storage" {
       days = 31
     }
   }
+
+  identity {
+    type         = "UserAssigned"
+    identity_ids = [azurerm_user_assigned_identity.user_id.id]
+  }
 }
 
 resource "azurerm_storage_account_network_rules" "storage" {
