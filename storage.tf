@@ -21,3 +21,9 @@ resource "azurerm_storage_account" "storage" {
     }
   }
 }
+
+resource "azurerm_storage_account_network_rules" "storage" {
+  storage_account_id = azurerm_storage_account.storage.id
+  default_action     = "Deny"
+  bypass             = ["AzureServices", "Logging", "Metrics"]
+}
